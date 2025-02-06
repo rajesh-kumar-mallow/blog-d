@@ -1,0 +1,38 @@
+.header {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  background: #222831;
+  border-bottom: 1px solid #393E46;
+
+  .logo {
+    color: #00ADB5;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 48px;
+  }
+
+  .menu {
+    flex: 1;
+    background: transparent;
+    border-bottom: none;
+
+    :global {
+      .ant-menu-item {
+        &:hover {
+          color: #00ADB5 !important;
+        }
+
+        &-selected {
+          color: #00ADB5 !important;
+          &::after {
+            border-bottom-color: #00ADB5 !important;
+          }
+        }
+      }
+    }
+  }
+} 

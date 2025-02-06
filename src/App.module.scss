@@ -1,0 +1,21 @@
+.layout {
+  min-height: 100vh;
+  background-color: #222831;
+}
+
+.content {
+  padding-top: 64px;
+  background-color: #222831;
+  min-height: calc(100vh - 64px);
+  
+  :global {
+    .ant-card {
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+} 

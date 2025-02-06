@@ -1,0 +1,28 @@
+Project Guidelines
+- Use node 18.16.0 or higher.
+- Always refer yarn.lock file first and package.json for dependencies.
+- Consider src/styles directory for style refrences.
+Code Style and Structure
+- Write concise JavaScript following Standard.js rules.
+- Use functional programming; avoid classes.
+- Prefer iteration and modularization over duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Structure files by exported component, subcomponents, helpers, and static content.
+Component and State Management
+- Use functional components and hooks (useState, useEffect).
+- Use React-Redux and reduxtoolkit hooks (useSelector, useDispatch) for state management.
+- Avoid inline function definitions within the render method.
+UI and Styling
+- Use Ant Design for component foundations.
+- Style components using SCSS with BEM conventions.
+- Use FontAwesome 6 <i> tags for icons.
+- Organize SCSS files in a consistent structure (e.g., .module.scss).
+  
+Code Quality
+- Enforce quality with ESLint (Airbnb style guide) and Prettier.
+Error Handling and Validation
+- Handle errors and edge cases early with guard clauses.
+- Avoid unnecessary else statements; prioritize early returns.
+- Log errors and provide user-friendly messages.
+Security
+- Sanitize user inputs; avoid dangerouslySetInnerHTML unless necessary and sanitized.

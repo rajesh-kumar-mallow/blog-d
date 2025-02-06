@@ -1,0 +1,90 @@
+.authorDetailContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+
+  .authorCard {
+    background: #393E46;
+    border-color: #393E46;
+    margin-bottom: 32px;
+
+    .authorHeader {
+      display: flex;
+      gap: 24px;
+      position: relative;
+
+      .avatar {
+        background: #222831;
+        border: 3px solid #00ADB5;
+      }
+
+      .authorInfo {
+        flex: 1;
+
+        h1 {
+          color: #00ADB5;
+          font-size: 32px;
+          margin: 0 0 8px;
+        }
+
+        .email {
+          color: rgba(238, 238, 238, 0.65);
+          font-size: 16px;
+          margin-bottom: 16px;
+        }
+
+        .bio {
+          color: rgba(238, 238, 238, 0.85);
+          font-size: 16px;
+          line-height: 1.6;
+          margin-bottom: 16px;
+        }
+
+        .stats {
+          display: flex;
+          gap: 24px;
+          color: rgba(238, 238, 238, 0.65);
+          font-size: 14px;
+
+          span {
+            &:not(:first-child)::before {
+              content: '•';
+              margin-right: 24px;
+              color: rgba(238, 238, 238, 0.25);
+            }
+          }
+        }
+      }
+
+      .actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        gap: 12px;
+
+        .ant-btn {
+          background: transparent;
+          border-color: currentColor;
+          
+          &:not(.ant-btn-dangerous) {
+            color: #00ADB5;
+            
+            &:hover {
+              color: #0095A0;
+              border-color: currentColor;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .authorPosts {
+    h2 {
+      color: #EEEEEE;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+  }
+} 

@@ -1,0 +1,84 @@
+.postDetailContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+
+  .spinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+  }
+
+  .postCard {
+    background: #393E46;
+    border-color: #393E46;
+    
+    :global {
+      .ant-card-head {
+        border-bottom-color: #222831;
+        
+        .ant-card-head-title {
+          color: #00ADB5;
+          font-size: 24px;
+          font-weight: 500;
+        }
+      }
+
+      .ant-card-actions {
+        background: #222831;
+        border-top-color: #393E46;
+
+        li {
+          border-right-color: #393E46;
+        }
+
+        .ant-btn {
+          color: #EEEEEE;
+          
+          &:hover {
+            color: #00ADB5;
+          }
+
+          &[disabled] {
+            color: rgba(238, 238, 238, 0.25);
+          }
+        }
+
+        .ant-btn-dangerous {
+          &:hover {
+            color: #ff4d4f;
+          }
+        }
+      }
+    }
+  }
+
+  .postContent {
+    color: rgba(238, 238, 238, 0.85);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    white-space: pre-wrap;
+  }
+
+  .postMeta {
+    color: rgba(238, 238, 238, 0.45);
+    font-size: 14px;
+
+    a {
+      color: #00ADB5;
+      &:hover {
+        color: #0095A0;
+      }
+    }
+
+    .postDate {
+      margin-left: 12px;
+      &::before {
+        content: '•';
+        margin-right: 12px;
+      }
+    }
+  }
+} 
