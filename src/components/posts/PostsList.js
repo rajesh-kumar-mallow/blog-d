@@ -83,35 +83,37 @@ const PostsList = () => {
 
   return (
     <div className={styles.postsContainer}>
-      <div className={styles.header}>
-        <div className={styles.filters}>
+      <div className={styles.controls}>
+        <Space>
           <Select
             defaultValue="all"
-            className={styles.filterSelect}
+            value={filters.mine ? 'mine' : 'all'}
             onChange={handleFilterChange}
+            className={styles.filterSelect}
           >
             <Option value="all">All Posts</Option>
             <Option value="mine">My Posts</Option>
           </Select>
           <Select
-            defaultValue="latest"
-            className={styles.sortSelect}
+            value={filters.sort}
             onChange={handleSortChange}
+            className={styles.sortSelect}
           >
-            <Option value="latest">Latest</Option>
-            <Option value="popular">Most Popular</Option>
+            <Option value="created_at">Latest</Option>
+            <Option value="likes_count">Most Liked</Option>
           </Select>
-        </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={handleCreateClick}
-        >
-          Create Post
-        </Button>
+          <Button 
+            type="primary" 
+            icon={<PlusOutlined />}
+            onClick={handleCreateClick}
+          >
+            Create Post
+          </Button>
+        </Space>
       </div>
 
       <List
+        grid={{ gutter: 16, column: 1 }}
         dataSource={posts}
         loading={isLoading}
         renderItem={(post) => (
@@ -123,13 +125,14 @@ const PostsList = () => {
                   key="like"
                   icon={post.is_liked ? <LikeFilled /> : <LikeOutlined />}
                   onClick={() => handleLikeToggle(post)}
+                  disabled={isPostOwner(post)}
+                  type={post.is_liked ? 'primary' : 'default'}
                 >
                   {post.likes_count}
                 </Button>,
                 isPostOwner(post) && (
                   <Button
                     key="edit"
-                    type="text"
                     icon={<EditOutlined />}
                     onClick={() => handleEditClick(post)}
                   >
@@ -139,9 +142,8 @@ const PostsList = () => {
                 isPostOwner(post) && (
                   <Button
                     key="delete"
-                    type="text"
-                    danger
                     icon={<DeleteOutlined />}
+                    danger
                     onClick={() => handleDelete(post.id)}
                   >
                     Delete
@@ -150,21 +152,19 @@ const PostsList = () => {
               ].filter(Boolean)}
             >
               <Card.Meta
-                title={
-                  <Link to={`/posts/${post.id}`} className={styles.postTitle}>
-                    {post.title}
-                  </Link>
-                }
+                title={<Link to={`/posts/${post.id}`}>{post.title}</Link>}
                 description={
-                  <div>
-                    <p className={styles.postContent}>{post.content}</p>
-                    <p className={styles.postMeta}>
-                      By <Link to={`/authors/${post.user.id}`}>{post.user.name}</Link>
-                      <span className={styles.postDate}>
-                        {new Date(post.created_at).toLocaleDateString()}
-                      </span>
+                  <>
+                    <p className={styles.postPreview}>
+                      {post.content.length > 200 
+                        ? `${post.content.slice(0, 200)}...` 
+                        : post.content}
                     </p>
-                  </div>
+                    <p className={styles.postMeta}>
+                      By{' '}
+                      <Link to={`/authors/${post.user.id}`}>{post.user.name}</Link>
+                    </p>
+                  </>
                 }
               />
             </Card>

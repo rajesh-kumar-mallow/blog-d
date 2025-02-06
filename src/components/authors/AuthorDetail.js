@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Avatar, Button, message } from 'antd'
+import { Card, Avatar, Button, List, message, Popconfirm } from 'antd'
 import { UserOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { 
   fetchAuthorStart, 
@@ -17,6 +17,7 @@ const AuthorDetail = () => {
   const dispatch = useDispatch()
   const { currentAuthor, isLoading } = useSelector((state) => state.authors)
   const { user } = useSelector((state) => state.auth)
+  const isOwnProfile = user?.id === currentAuthor?.id
 
   useEffect(() => {
     dispatch(fetchAuthorStart(authorId))
@@ -33,51 +34,61 @@ const AuthorDetail = () => {
     }
   }
 
-  const isOwnProfile = user?.id === parseInt(authorId)
-
-  if (!currentAuthor) return null
+  if (!currentAuthor && !isLoading) {
+    return <div>Author not found</div>
+  }
 
   return (
     <div className={styles.authorDetailContainer}>
-      <Card className={styles.authorCard}>
-        <div className={styles.authorHeader}>
-          <Avatar
-            size={100}
-            icon={<UserOutlined />}
-            src={currentAuthor.avatar}
-            className={styles.avatar}
-          />
-          <div className={styles.authorInfo}>
-            <h1>{currentAuthor.name}</h1>
-            <p className={styles.email}>{currentAuthor.email}</p>
-            <p className={styles.bio}>{currentAuthor.bio || 'No bio available'}</p>
-            <div className={styles.stats}>
-              <span>Total Posts: {currentAuthor.postsCount}</span>
-              <span>Total Likes: {currentAuthor.totalLikes}</span>
+      <Card loading={isLoading}>
+        <Card.Meta
+          avatar={
+            <Avatar
+              size={96}
+              icon={<UserOutlined />}
+              src={currentAuthor?.avatar}
+            />
+          }
+          title={
+            <div className={styles.authorHeader}>
+              <h1>{currentAuthor?.name}</h1>
+              {isOwnProfile && (
+                <div className={styles.actions}>
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => navigate(`/authors/${authorId}/edit`)}
+                  >
+                    Edit Profile
+                  </Button>
+                  <Popconfirm
+                    title="Are you sure you want to delete your profile?"
+                    onConfirm={handleDelete}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button icon={<DeleteOutlined />} danger>
+                      Delete Profile
+                    </Button>
+                  </Popconfirm>
+                </div>
+              )}
             </div>
-          </div>
-          {isOwnProfile && (
-            <div className={styles.actions}>
-              <Button
-                icon={<EditOutlined />}
-                onClick={() => navigate(`/authors/${authorId}/edit`)}
-              >
-                Edit Profile
-              </Button>
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleDelete}
-              >
-                Delete Profile
-              </Button>
+          }
+          description={
+            <div className={styles.authorInfo}>
+              <p>{currentAuthor?.email}</p>
+              <p>{currentAuthor?.bio}</p>
+              <div className={styles.stats}>
+                <span>Total Posts: {currentAuthor?.postsCount}</span>
+                <span>Total Likes: {currentAuthor?.totalLikes}</span>
+              </div>
             </div>
-          )}
-        </div>
+          }
+        />
       </Card>
 
       <div className={styles.authorPosts}>
-        <h2>Posts by {currentAuthor.name}</h2>
+        <h2>Posts by {currentAuthor?.name}</h2>
         <PostsList authorId={authorId} />
       </div>
     </div>

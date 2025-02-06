@@ -44,55 +44,45 @@ const PostForm = ({ initialValues, onSuccess }) => {
   }
 
   return (
-    <div className={styles.formContainer}>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-        className={styles.form}
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={onFinish}
+      className={styles.form}
+    >
+      <Form.Item
+        label="Title"
+        name="title"
+        validateStatus={error?.title ? 'error' : ''}
+        help={error?.title?.[0]}
+        rules={[
+          { required: true, message: 'Please input post title!' },
+          { max: 255, message: 'Title cannot be longer than 255 characters!' }
+        ]}
       >
-        <Form.Item
-          label="Title"
-          name="title"
-          validateStatus={error?.title ? 'error' : ''}
-          help={error?.title?.[0]}
-          rules={[
-            { required: true, message: 'Please input post title!' },
-            { max: 255, message: 'Title cannot be longer than 255 characters!' }
-          ]}
-        >
-          <Input placeholder="Enter post title" />
-        </Form.Item>
+        <Input />
+      </Form.Item>
 
-        <Form.Item
-          label="Content"
-          name="content"
-          validateStatus={error?.content ? 'error' : ''}
-          help={error?.content?.[0]}
-          rules={[{ required: true, message: 'Please input post content!' }]}
-        >
-          <TextArea 
-            rows={6} 
-            placeholder="Write your post content here..."
-          />
-        </Form.Item>
+      <Form.Item
+        label="Content"
+        name="content"
+        validateStatus={error?.content ? 'error' : ''}
+        help={error?.content?.[0]}
+        rules={[{ required: true, message: 'Please input post content!' }]}
+      >
+        <TextArea rows={6} />
+      </Form.Item>
 
-        {error && typeof error === 'string' && (
-          <div className={styles.errorMessage}>{error}</div>
-        )}
+      {error && typeof error === 'string' && (
+        <div className={styles.errorMessage}>{error}</div>
+      )}
 
-        <Form.Item className={styles.submitButton}>
-          <Button 
-            type="primary" 
-            htmlType="submit" 
-            loading={isLoading} 
-            block
-          >
-            {initialValues ? 'Update Post' : 'Create Post'}
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+      <Form.Item className={styles.submitButton}>
+        <Button type="primary" htmlType="submit" loading={isLoading} block>
+          {initialValues ? 'Update Post' : 'Create Post'}
+        </Button>
+      </Form.Item>
+    </Form>
   )
 }
 

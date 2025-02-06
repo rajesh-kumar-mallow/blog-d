@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   HomeOutlined,
   UserOutlined,
-  PlusOutlined,
+  LoginOutlined,
   LogoutOutlined,
+  PlusOutlined
 } from '@ant-design/icons'
 import { logoutStart } from '../../store/slices/authSlice'
 import styles from './Navigation.module.scss'
@@ -17,25 +18,38 @@ const Navigation = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { isAuthenticated } = useSelector((state) => state.auth)
+  const { isAuthenticated, user } = useSelector((state) => state.auth)
 
   const handleLogout = () => {
     dispatch(logoutStart())
   }
 
+  const publicItems = [
+    {
+      key: '/login',
+      icon: <LoginOutlined />,
+      label: <Link to="/login">Login</Link>
+    },
+    {
+      key: '/signup',
+      icon: <UserOutlined />,
+      label: <Link to="/signup">Sign Up</Link>
+    }
+  ]
+
   const privateItems = [
     {
-      key: 'home',
+      key: '/',
       icon: <HomeOutlined />,
       label: <Link to="/">Home</Link>
     },
     {
-      key: 'create',
+      key: '/posts/create',
       icon: <PlusOutlined />,
-      label: <Link to="/create">Create Post</Link>
+      label: <Link to="/posts/create">Create Post</Link>
     },
     {
-      key: 'authors',
+      key: '/authors',
       icon: <UserOutlined />,
       label: <Link to="/authors">Authors</Link>
     },
@@ -43,23 +57,19 @@ const Navigation = () => {
       key: 'logout',
       icon: <LogoutOutlined />,
       label: 'Logout',
-      onClick: handleLogout,
-      style: { marginLeft: 'auto' }
+      onClick: handleLogout
     }
   ]
 
   return (
     <Header className={styles.header}>
       <div className={styles.logo}>Blog App</div>
-      {isAuthenticated && (
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          selectedKeys={[location.pathname]}
-          items={privateItems}
-          className={styles.menu}
-        />
-      )}
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        selectedKeys={[location.pathname]}
+        items={isAuthenticated ? privateItems : publicItems}
+      />
     </Header>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Card, Button, Space, message, Spin } from 'antd'
+import { Card, Button, Space, message, Spin, Popconfirm } from 'antd'
 import { LikeOutlined, LikeFilled, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import api from '../../api/config'
@@ -65,57 +65,51 @@ const PostDetail = () => {
 
   return (
     <div className={styles.postDetailContainer}>
-      {isLoading ? (
-        <div className={styles.spinnerContainer}>
-          <Spin size="large" />
-        </div>
-      ) : post && (
-        <Card
-          title={post.title}
-          className={styles.postCard}
-          actions={[
+      <Card
+        title={post.title}
+        extra={
+          <Space>
             <Button
-              key="like"
               icon={post.is_liked ? <LikeFilled /> : <LikeOutlined />}
               onClick={handleLikeToggle}
               disabled={isAuthor}
+              type={post.is_liked ? 'primary' : 'default'}
             >
               {post.likes_count}
-            </Button>,
-            isAuthor && (
-              <Button
-                key="edit"
-                type="text"
-                icon={<EditOutlined />}
-                onClick={() => navigate(`/posts/${post.id}/edit`)}
-              >
-                Edit
-              </Button>
-            ),
-            isAuthor && (
-              <Button
-                key="delete"
-                type="text"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleDelete}
-              >
-                Delete
-              </Button>
-            )
-          ].filter(Boolean)}
-        >
-          <div className={styles.postContent}>
-            {post.content}
-          </div>
-          <div className={styles.postMeta}>
-            By <Link to={`/authors/${post.user.id}`}>{post.user.name}</Link>
-            <span className={styles.postDate}>
-              {new Date(post.created_at).toLocaleDateString()}
-            </span>
-          </div>
-        </Card>
-      )}
+            </Button>
+            {isAuthor && (
+              <>
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => navigate(`/posts/${post.id}/edit`)}
+                >
+                  Edit
+                </Button>
+                <Popconfirm
+                  title="Are you sure you want to delete this post?"
+                  onConfirm={handleDelete}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button icon={<DeleteOutlined />} danger>
+                    Delete
+                  </Button>
+                </Popconfirm>
+              </>
+            )}
+          </Space>
+        }
+      >
+        <div className={styles.postContent}>
+          <p>{post.content}</p>
+        </div>
+        <div className={styles.postMeta}>
+          By <Link to={`/authors/${post.user.id}`}>{post.user.name}</Link>
+          <span className={styles.postDate}>
+            {new Date(post.created_at).toLocaleDateString()}
+          </span>
+        </div>
+      </Card>
     </div>
   )
 }
