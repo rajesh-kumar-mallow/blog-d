@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Layout } from 'antd'
 import Login from './components/auth/Login'
@@ -11,21 +11,10 @@ import AuthorDetail from './components/authors/AuthorDetail'
 import AuthorEditForm from './components/authors/AuthorEditForm'
 import Navigation from './components/common/Navigation'
 import styles from './App.module.scss'
-import { useDispatch, useSelector } from 'react-redux'
-import { getCurrentUserStart } from './store/slices/authSlice'
 
 const { Content } = Layout
 
 const App = () => {
-  const dispatch = useDispatch()
-  const { isAuthenticated, user } = useSelector((state) => state.auth)
-
-  useEffect(() => {
-    if (isAuthenticated && !user) {
-      dispatch(getCurrentUserStart())
-    }
-  }, [dispatch, isAuthenticated, user])
-
   return (
     <Router>
       <Layout className={styles.layout}>

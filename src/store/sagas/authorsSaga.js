@@ -1,4 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
+import { message } from 'antd'
 import api from '../../api/config'
 import {
   fetchAuthorsStart,
@@ -17,53 +18,94 @@ import {
 
 function* fetchAuthors() {
   try {
-    const response = yield call(api.get, '/authors')
-    if (response.success) {
-      yield put(fetchAuthorsSuccess(response.data))
-    } else {
-      yield put(fetchAuthorsFailure(response.message))
-    }
+    const response = yield call(api.get, '/users')
+    // let res = [
+    //   {
+    //     "id": 1,
+    //     "email": "logesh.mohanasundaram@mallow-tech.com",
+    //     "name": "Logesh Mohanasundaram",
+    //     "posts_count": 1,
+    //     "posts": [
+    //       {
+    //         "id": 1,
+    //         "title": "Test Title1",
+    //         "content": "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    //         "likes_count": 0,
+    //         "created_at": "2025-02-04T10:58:13.170Z"
+    //       }
+    //     ]
+    //   }
+    // ]
+    yield put(fetchAuthorsSuccess(response))
   } catch (error) {
-    yield put(fetchAuthorsFailure(error.message || 'Failed to fetch authors'))
+    const errorMsg = error.message || 'Failed to fetch authors'
+    yield put(fetchAuthorsFailure(errorMsg))
+    message.error(errorMsg)
   }
 }
 
 function* fetchAuthor({ payload: authorId }) {
   try {
-    const response = yield call(api.get, `/authors/${authorId}`)
-    if (response.success) {
-      yield put(fetchAuthorSuccess(response.data))
-    } else {
-      yield put(fetchAuthorFailure(response.message))
-    }
+    const response = yield call(api.get, `/users/${authorId}`)
+    // let res = {
+    //   "id": 1,
+    //   "email": "logesh.mohanasundaram@mallow-tech.com",
+    //   "name": "Logesh Mohanasundaram",
+    //   "posts_count": 1,
+    //   "posts": [
+    //     {
+    //       "id": 1,
+    //       "title": "Test Title1",
+    //       "content": "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    //       "likes_count": 0,
+    //       "created_at": "2025-02-04T10:58:13.170Z"
+    //     }
+    //   ]
+    // }
+    yield put(fetchAuthorSuccess(response))
   } catch (error) {
-    yield put(fetchAuthorFailure(error.message || 'Failed to fetch author'))
+    const errorMsg = error.message || 'Failed to fetch author'
+    yield put(fetchAuthorFailure(errorMsg))
+    message.error(errorMsg)
   }
 }
 
 function* updateAuthor({ payload: { authorId, authorData } }) {
   try {
-    const response = yield call(api.put, `/authors/${authorId}`, authorData)
-    if (response.success) {
-      yield put(updateAuthorSuccess(response.data))
-    } else {
-      yield put(updateAuthorFailure(response.message))
-    }
+    const response = yield call(api.put, `/users/${authorId}`, authorData)
+    // let res = {
+    //   "id": 1,
+    //   "email": "logesh.mohanasundaram@mallow-tech.com",
+    //   "name": "Logesh Mohanasundaram",
+    //   "posts_count": 1,
+    //   "posts": [
+    //     {
+    //       "id": 1,
+    //       "title": "Test Title1",
+    //       "content": "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    //       "likes_count": 0,
+    //       "created_at": "2025-02-04T10:58:13.170Z"
+    //     }
+    //   ]
+    // }
+    yield put(updateAuthorSuccess(response))
+    message.success('Profile updated successfully')
   } catch (error) {
-    yield put(updateAuthorFailure(error.message || 'Failed to update author'))
+    const errorMsg = error.message || 'Failed to update author'
+    yield put(updateAuthorFailure(errorMsg))
+    message.error(errorMsg)
   }
 }
 
 function* deleteAuthor({ payload: authorId }) {
   try {
-    const response = yield call(api.delete, `/authors/${authorId}`)
-    if (response.success) {
-      yield put(deleteAuthorSuccess(authorId))
-    } else {
-      yield put(deleteAuthorFailure(response.message))
-    }
+    yield call(api.delete, `/users/${authorId}`)
+    yield put(deleteAuthorSuccess(authorId))
+    message.success('Profile deleted successfully')
   } catch (error) {
-    yield put(deleteAuthorFailure(error.message || 'Failed to delete author'))
+    const errorMsg = error.message || 'Failed to delete author'
+    yield put(deleteAuthorFailure(errorMsg))
+    message.error(errorMsg)
   }
 }
 

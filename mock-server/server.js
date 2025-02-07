@@ -6,355 +6,219 @@ const port = 3001
 app.use(cors())
 app.use(express.json())
 
-// Mock data
+// Rich static content
 const mockData = {
   users: [
-    { id: 1, name: 'John Doe', email: 'john@example.com', bio: 'Software Developer' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', bio: 'UI Designer' }
-  ],
-  posts: [
-    { 
-      id: 1, 
-      title: 'First Post', 
-      content: 'This is my first post content',
-      user_id: 1,
-      likes_count: 5,
-      is_liked: false,
-      created_at: '2024-01-20T10:00:00Z',
-      user: { 
-        id: 1, 
-        name: 'John Doe',
-        email: 'john@example.com'
-      }
+    {
+      id: 1,
+      name: "John Doe",
+      email: "john@example.com",
+      posts_count: 2,
+      posts: [
+        {
+          id: 1,
+          title: "Getting Started with React",
+          content: "React is a powerful JavaScript library for building user interfaces. In this post, we'll explore the fundamentals of React and how to get started with your first React application...",
+          likes_count: 15,
+          is_liked: false,
+          created_at: "2024-02-10T08:00:00Z"
+        },
+        {
+          id: 2,
+          title: "State Management with Redux",
+          content: "Redux is a predictable state container for JavaScript apps. Let's dive deep into how Redux works and when you should use it in your React applications...",
+          likes_count: 10,
+          is_liked: true,
+          created_at: "2024-02-11T10:30:00Z"
+        }
+      ]
     },
-    { 
-      id: 2, 
-      title: 'Design Trends', 
-      content: 'Latest design trends in 2024',
-      user_id: 2,
-      likes_count: 3,
-      is_liked: true,
-      created_at: '2024-01-21T15:30:00Z',
-      user: { 
-        id: 2, 
-        name: 'Jane Smith',
-        email: 'jane@example.com'
-      }
-    }
-  ],
-  tokens: {},
-  authors: [
-    { 
-      id: 1, 
-      name: 'John Doe', 
-      email: 'john@example.com', 
-      bio: 'Software Developer',
-      postsCount: 1,
-      totalLikes: 5
+    {
+      id: 2,
+      name: "Jane Smith",
+      email: "jane@example.com",
+      posts_count: 3,
+      posts: [
+        {
+          id: 3,
+          title: "Modern CSS Techniques",
+          content: "CSS has evolved significantly over the years. In this post, we'll look at modern CSS techniques like Grid, Flexbox, and CSS Variables that can improve your web development workflow...",
+          likes_count: 8,
+          is_liked: false,
+          created_at: "2024-02-09T15:45:00Z"
+        },
+        {
+          id: 4,
+          title: "Responsive Design Best Practices",
+          content: "Creating responsive websites is crucial in today's mobile-first world. Let's explore best practices and techniques for building responsive layouts...",
+          likes_count: 12,
+          is_liked: false,
+          created_at: "2024-02-12T09:15:00Z"
+        },
+        {
+          id: 5,
+          title: "Web Accessibility Guidelines",
+          content: "Making your website accessible to all users is not just good practice, it's essential. Learn about WCAG guidelines and how to implement them...",
+          likes_count: 20,
+          is_liked: true,
+          created_at: "2024-02-13T11:20:00Z"
+        }
+      ]
     },
-    { 
-      id: 2, 
-      name: 'Jane Smith', 
-      email: 'jane@example.com', 
-      bio: 'UI Designer',
-      postsCount: 1,
-      totalLikes: 3
+    {
+      id: 3,
+      name: "Mike Johnson",
+      email: "mike@example.com",
+      posts_count: 2,
+      posts: [
+        {
+          id: 6,
+          title: "Node.js Backend Development",
+          content: "Node.js has revolutionized backend development. In this comprehensive guide, we'll cover everything from setting up a Node.js server to building RESTful APIs...",
+          likes_count: 18,
+          is_liked: false,
+          created_at: "2024-02-14T14:00:00Z"
+        },
+        {
+          id: 7,
+          title: "Database Design Patterns",
+          content: "Proper database design is crucial for application performance. Let's explore common database design patterns and when to use them...",
+          likes_count: 14,
+          is_liked: true,
+          created_at: "2024-02-15T16:30:00Z"
+        }
+      ]
     }
   ]
 }
 
-// Auth Middleware
+// Authentication middleware
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]
   if (!token) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' })
+    return res.status(401).json({ status: 'error', message: 'No token provided' })
   }
-  if (!mockData.tokens[token]) {
-    return res.status(401).json({ success: false, message: 'Invalid token' })
-  }
-  req.user = mockData.tokens[token]
   next()
 }
 
 // Auth routes
-app.post('/api/auth/login', (req, res) => {
-  const { email, password } = req.body
+app.post('/api/v1/login', (req, res) => {
+  const { email } = req.body
   const user = mockData.users.find(u => u.email === email)
   
-  if (user && password === 'password') { // For testing, any password will work
-    const token = `mock-token-${user.id}`
-    mockData.tokens[token] = user
-    return res.json({
-      success: true,
-      data: {
-        token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          bio: user.bio
-        }
-      },
-      message: 'Login successful'
+  if (user) {
+    res.json({
+      token: 'mock-jwt-token',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        posts_count: user.posts_count
+      }
     })
+  } else {
+    res.status(401).json({ status: 'error', message: 'Invalid credentials' })
   }
-  
-  res.status(401).json({ 
-    success: false, 
-    message: 'Invalid credentials',
-    errors: {
-      email: ['Invalid email or password']
-    }
-  })
 })
 
-app.post('/api/auth/register', (req, res) => {
-  const { name, email, password } = req.body
-  
-  if (mockData.users.some(u => u.email === email)) {
-    return res.status(422).json({ 
-      success: false, 
-      message: 'Email already exists' 
-    })
-  }
-
-  const newUser = {
-    id: mockData.users.length + 1,
-    name,
-    email,
-    bio: ''
-  }
-  
-  mockData.users.push(newUser)
-  const token = `mock-token-${newUser.id}`
-  mockData.tokens[token] = newUser
-
-  res.json({
-    success: true,
-    data: {
-      token,
-      user: newUser
-    }
-  })
+// Users/Authors routes
+app.get('/api/v1/users', authMiddleware, (req, res) => {
+  const usersWithoutPosts = mockData.users.map(user => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    posts_count: user.posts_count
+  }))
+  res.json(usersWithoutPosts)
 })
 
-app.post('/api/auth/logout', authMiddleware, (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]
-  delete mockData.tokens[token]
-  res.json({ success: true })
-})
-
-app.get('/api/auth/me', authMiddleware, (req, res) => {
-  res.json({
-    success: true,
-    data: req.user
-  })
+app.get('/api/v1/users/:id', authMiddleware, (req, res) => {
+  const user = mockData.users.find(u => u.id === parseInt(req.params.id))
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404).json({ status: 'error', message: 'User not found' })
+  }
 })
 
 // Posts routes
-app.get('/api/posts/:id', authMiddleware, (req, res) => {
-  const post = mockData.posts.find(p => p.id === parseInt(req.params.id))
-  
-  if (!post) {
-    return res.status(404).json({ 
-      success: false, 
-      message: 'Post not found' 
-    })
+app.get('/api/v1/posts', authMiddleware, (req, res) => {
+  let posts = mockData.users.flatMap(user => 
+    user.posts.map(post => ({
+      ...post,
+      user: {
+        id: user.id,
+        name: user.name
+      }
+    }))
+  )
+
+  // Sort by date or likes
+  if (req.query.sort === 'likes_count') {
+    posts = posts.sort((a, b) => b.likes_count - a.likes_count)
+  } else {
+    posts = posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
   }
 
-  // Add is_liked status based on current user
-  const postWithLikeStatus = {
-    ...post,
-    is_liked: false // You can implement actual like status logic here
+  // Filter by author
+  if (req.query.author) {
+    posts = posts.filter(post => post.user.id === parseInt(req.query.author))
   }
 
-  res.json({
-    success: true,
-    data: postWithLikeStatus
-  })
+  res.json(posts)
 })
 
-app.get('/api/posts', authMiddleware, (req, res) => {
-  const { mine, author } = req.query
-  let filteredPosts = [...mockData.posts]
-  
-  if (mine === 'true') {
-    filteredPosts = filteredPosts.filter(p => p.user_id === req.user.id)
-  }
-  
-  if (author) {
-    filteredPosts = filteredPosts.filter(p => p.user_id === parseInt(author))
-  }
-
-  res.json({
-    success: true,
-    data: filteredPosts
-  })
-})
-
-app.post('/api/posts', authMiddleware, (req, res) => {
+app.post('/api/v1/posts', authMiddleware, (req, res) => {
   const { title, content } = req.body
   const newPost = {
-    id: mockData.posts.length + 1,
+    id: Math.max(...mockData.users.flatMap(u => u.posts.map(p => p.id))) + 1,
     title,
     content,
-    user_id: req.user.id,
     likes_count: 0,
     is_liked: false,
-    created_at: new Date().toISOString(),
-    user: { id: req.user.id, name: req.user.name }
+    created_at: new Date().toISOString()
   }
-  
-  mockData.posts.unshift(newPost)
-  res.json({
-    success: true,
-    data: newPost
-  })
+  res.json(newPost)
 })
 
-app.put('/api/posts/:id', authMiddleware, (req, res) => {
-  const post = mockData.posts.find(p => p.id === parseInt(req.params.id))
+app.post('/api/v1/posts/:id/like', authMiddleware, (req, res) => {
+  const postId = parseInt(req.params.id)
+  let targetPost = null
   
-  if (!post) {
-    return res.status(404).json({ success: false, message: 'Post not found' })
-  }
-  
-  if (post.user_id !== req.user.id) {
-    return res.status(403).json({ success: false, message: 'Unauthorized' })
-  }
-  
-  Object.assign(post, req.body)
-  res.json({
-    success: true,
-    data: post
-  })
-})
-
-app.delete('/api/posts/:id', authMiddleware, (req, res) => {
-  const postIndex = mockData.posts.findIndex(p => p.id === parseInt(req.params.id))
-  
-  if (postIndex === -1) {
-    return res.status(404).json({ success: false, message: 'Post not found' })
-  }
-  
-  if (mockData.posts[postIndex].user_id !== req.user.id) {
-    return res.status(403).json({ success: false, message: 'Unauthorized' })
-  }
-  
-  mockData.posts.splice(postIndex, 1)
-  res.json({ success: true })
-})
-
-// Like/Unlike routes
-app.post('/api/posts/:id/like', authMiddleware, (req, res) => {
-  const post = mockData.posts.find(p => p.id === parseInt(req.params.id))
-  
-  if (!post) {
-    return res.status(404).json({ success: false, message: 'Post not found' })
-  }
-  
-  post.likes_count++
-  post.is_liked = true
-  
-  res.json({
-    success: true,
-    data: {
-      likes_count: post.likes_count,
-      is_liked: true
+  mockData.users.forEach(user => {
+    const post = user.posts.find(p => p.id === postId)
+    if (post) {
+      post.likes_count += 1
+      post.is_liked = true
+      targetPost = post
     }
   })
+
+  if (targetPost) {
+    res.json({ likes_count: targetPost.likes_count, is_liked: true })
+  } else {
+    res.status(404).json({ status: 'error', message: 'Post not found' })
+  }
 })
 
-app.delete('/api/posts/:id/like', authMiddleware, (req, res) => {
-  const post = mockData.posts.find(p => p.id === parseInt(req.params.id))
+app.delete('/api/v1/posts/:id/like', authMiddleware, (req, res) => {
+  const postId = parseInt(req.params.id)
+  let targetPost = null
   
-  if (!post) {
-    return res.status(404).json({ success: false, message: 'Post not found' })
-  }
-  
-  post.likes_count--
-  post.is_liked = false
-  
-  res.json({
-    success: true,
-    data: {
-      likes_count: post.likes_count,
-      is_liked: false
+  mockData.users.forEach(user => {
+    const post = user.posts.find(p => p.id === postId)
+    if (post) {
+      post.likes_count = Math.max(0, post.likes_count - 1)
+      post.is_liked = false
+      targetPost = post
     }
   })
-})
 
-// Add Authors routes
-app.get('/api/authors', authMiddleware, (req, res) => {
-  res.json({
-    success: true,
-    data: mockData.authors
-  })
-})
-
-app.get('/api/authors/:id', authMiddleware, (req, res) => {
-  const author = mockData.authors.find(a => a.id === parseInt(req.params.id))
-  
-  if (!author) {
-    return res.status(404).json({ success: false, message: 'Author not found' })
+  if (targetPost) {
+    res.json({ likes_count: targetPost.likes_count, is_liked: false })
+  } else {
+    res.status(404).json({ status: 'error', message: 'Post not found' })
   }
-
-  res.json({
-    success: true,
-    data: author
-  })
-})
-
-app.put('/api/authors/:id', authMiddleware, (req, res) => {
-  const author = mockData.authors.find(a => a.id === parseInt(req.params.id))
-  
-  if (!author) {
-    return res.status(404).json({ success: false, message: 'Author not found' })
-  }
-  
-  if (author.id !== req.user.id) {
-    return res.status(403).json({ success: false, message: 'Unauthorized' })
-  }
-  
-  const { name, email, bio } = req.body
-  Object.assign(author, { name, email, bio })
-  
-  // Update corresponding user data
-  const user = mockData.users.find(u => u.id === author.id)
-  if (user) {
-    Object.assign(user, { name, email, bio })
-  }
-
-  res.json({
-    success: true,
-    data: author
-  })
-})
-
-app.delete('/api/authors/:id', authMiddleware, (req, res) => {
-  const authorIndex = mockData.authors.findIndex(a => a.id === parseInt(req.params.id))
-  
-  if (authorIndex === -1) {
-    return res.status(404).json({ success: false, message: 'Author not found' })
-  }
-  
-  if (mockData.authors[authorIndex].id !== req.user.id) {
-    return res.status(403).json({ success: false, message: 'Unauthorized' })
-  }
-  
-  // Remove author's posts
-  mockData.posts = mockData.posts.filter(p => p.user_id !== req.user.id)
-  
-  // Remove author
-  mockData.authors.splice(authorIndex, 1)
-  
-  // Remove corresponding user
-  const userIndex = mockData.users.findIndex(u => u.id === req.user.id)
-  if (userIndex !== -1) {
-    mockData.users.splice(userIndex, 1)
-  }
-
-  res.json({ success: true })
 })
 
 app.listen(port, () => {

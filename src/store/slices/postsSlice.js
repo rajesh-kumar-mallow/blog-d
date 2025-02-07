@@ -110,9 +110,6 @@ const postsSlice = createSlice({
         order: 'desc'
       }
     },
-    clearError: (state) => {
-      state.error = null
-    }
   }
 })
 
@@ -137,7 +134,6 @@ export const {
   unlikePostFailure,
   setFilters,
   clearFilters,
-  clearError
 } = postsSlice.actions
 
 export default postsSlice.reducer 

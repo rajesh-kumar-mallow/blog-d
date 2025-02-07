@@ -3,40 +3,39 @@ import { createSlice } from '@reduxjs/toolkit'
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
+    user: localStorage.getItem('user'),
     token: localStorage.getItem('token'),
     isLoading: false,
-    error: null,
     isAuthenticated: !!localStorage.getItem('token')
   },
   reducers: {
     // Login
     loginStart: (state) => {
       state.isLoading = true
-      state.error = null
     },
     loginSuccess: (state, action) => {
       state.isLoading = false
       state.token = action.payload.token
+      state.user = action.payload.user
       state.isAuthenticated = true
     },
-    loginFailure: (state, action) => {
+    loginFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
+      state.isAuthenticated = false
     },
     // Signup
     signupStart: (state) => {
       state.isLoading = true
-      state.error = null
     },
     signupSuccess: (state, action) => {
       state.isLoading = false
       state.token = action.payload.token
+      state.user = action.payload.user
       state.isAuthenticated = true
     },
-    signupFailure: (state, action) => {
+    signupFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
+      state.isAuthenticated = false
     },
     // Logout
     logoutStart: (state) => {
@@ -48,24 +47,8 @@ const authSlice = createSlice({
       state.isAuthenticated = false
       state.isLoading = false
     },
-    logoutFailure: (state, action) => {
+    logoutFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
-    },
-    // Get Current User
-    getCurrentUserStart: (state) => {
-      state.isLoading = true
-    },
-    getCurrentUserSuccess: (state, action) => {
-      state.isLoading = false
-      state.user = action.payload
-    },
-    getCurrentUserFailure: (state, action) => {
-      state.isLoading = false
-      state.error = action.payload
-    },
-    clearError: (state) => {
-      state.error = null
     }
   }
 })
@@ -80,10 +63,6 @@ export const {
   logoutStart,
   logoutSuccess,
   logoutFailure,
-  getCurrentUserStart,
-  getCurrentUserSuccess,
-  getCurrentUserFailure,
-  clearError
 } = authSlice.actions
 
 export default authSlice.reducer 

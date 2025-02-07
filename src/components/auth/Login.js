@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { Form, Input, Button, Card, message } from 'antd'
+import { Form, Input, Button, Card } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
-import { loginStart, clearError } from '../../store/slices/authSlice'
+import { loginStart } from '../../store/slices/authSlice'
 import styles from './Login.module.scss'
 
 const Login = () => {
@@ -13,9 +13,6 @@ const Login = () => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/')
-    }
-    return () => {
-      dispatch(clearError())
     }
   }, [isAuthenticated, navigate, dispatch])
 

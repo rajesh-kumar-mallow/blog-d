@@ -1,16 +1,12 @@
 {
   "name": "mock-server",
   "version": "1.0.0",
-  "description": "Mock API server for blog app",
   "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "cors": "^2.8.5"
+  },
   "scripts": {
     "start": "node server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.2"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
-}
+  }
+} 

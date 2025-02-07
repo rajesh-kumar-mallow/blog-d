@@ -6,39 +6,33 @@ const authorsSlice = createSlice({
     items: [],
     currentAuthor: null,
     isLoading: false,
-    error: null
   },
   reducers: {
     // Fetch authors list
     fetchAuthorsStart: (state) => {
       state.isLoading = true
-      state.error = null
     },
     fetchAuthorsSuccess: (state, action) => {
       state.isLoading = false
       state.items = action.payload
     },
-    fetchAuthorsFailure: (state, action) => {
+    fetchAuthorsFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
     },
     // Fetch single author
     fetchAuthorStart: (state) => {
       state.isLoading = true
-      state.error = null
     },
     fetchAuthorSuccess: (state, action) => {
       state.isLoading = false
       state.currentAuthor = action.payload
     },
-    fetchAuthorFailure: (state, action) => {
+    fetchAuthorFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
     },
     // Update author
     updateAuthorStart: (state) => {
       state.isLoading = true
-      state.error = null
     },
     updateAuthorSuccess: (state, action) => {
       state.isLoading = false
@@ -50,14 +44,12 @@ const authorsSlice = createSlice({
         state.currentAuthor = action.payload
       }
     },
-    updateAuthorFailure: (state, action) => {
+    updateAuthorFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
     },
     // Delete author
     deleteAuthorStart: (state) => {
       state.isLoading = true
-      state.error = null
     },
     deleteAuthorSuccess: (state, action) => {
       state.isLoading = false
@@ -66,9 +58,8 @@ const authorsSlice = createSlice({
         state.currentAuthor = null
       }
     },
-    deleteAuthorFailure: (state, action) => {
+    deleteAuthorFailure: (state) => {
       state.isLoading = false
-      state.error = action.payload
     }
   }
 })
