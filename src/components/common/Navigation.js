@@ -44,11 +44,6 @@ const Navigation = () => {
       label: <Link to="/">Home</Link>
     },
     {
-      key: '/posts/create',
-      icon: <PlusOutlined />,
-      label: <Link to="/posts/create">Create Post</Link>
-    },
-    {
       key: '/authors',
       icon: <UserOutlined />,
       label: <Link to="/authors">Authors</Link>

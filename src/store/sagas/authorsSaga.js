@@ -15,6 +15,7 @@ import {
   deleteAuthorSuccess,
   deleteAuthorFailure
 } from '../slices/authorsSlice'
+import { fetchPostsSuccess } from '../slices/postsSlice'
 
 function* fetchAuthors() {
   try {
@@ -63,6 +64,7 @@ function* fetchAuthor({ payload: authorId }) {
     //   ]
     // }
     yield put(fetchAuthorSuccess(response))
+    yield put(fetchPostsSuccess(response))
   } catch (error) {
     const errorMsg = error.message || 'Failed to fetch author'
     yield put(fetchAuthorFailure(errorMsg))

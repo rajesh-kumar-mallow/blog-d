@@ -27,7 +27,7 @@ const PostsList = () => {
   }, [dispatch, filters])
 
   const isPostOwner = (post) => {
-    return user?.id === post.user.id
+    return user?.id === post.user?.id
   }
 
   const handleDelete = async (postId) => {
@@ -155,7 +155,7 @@ const PostsList = () => {
                     </p>
                     <p className={styles.postMeta}>
                       By{' '}
-                      <Link to={`/authors/${post.user.id}`}>{post.user.name}</Link>
+                      <Link to={`/authors/${post.user?.id}`}>{post.user?.name}</Link>
                     </p>
                   </>
                 }

@@ -21,17 +21,15 @@ const PostForm = ({ initialValues, onSuccess }) => {
     return () => form.resetFields()
   }, [form, initialValues])
 
-  const onFinish = async (values) => {
+  const onFinish = (values) => {
     try {
       if (initialValues) {
-        await dispatch(updatePostStart({ 
+        dispatch(updatePostStart({ 
           postId: initialValues.id, 
           postData: values 
         }))
-        message.success('Post updated successfully')
       } else {
-        await dispatch(createPostStart(values))
-        message.success('Post created successfully')
+        dispatch(createPostStart(values))
       }
       onSuccess?.()
     } catch (err) {
